@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Cursos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 32px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 24px 18px 18px 18px;
+        }
+        h2 {
+            text-align: center;
+            color: #2d3a4a;
+            margin-bottom: 18px;
+        }
+        form label {
+            display: block;
+            margin-bottom: 6px;
+            color: #34495e;
+            font-weight: 500;
+        }
+        form input {
+            width: 100%;
+            padding: 8px 10px;
+            margin-bottom: 14px;
+            border: 1px solid #cfd8dc;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px 0;
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #1565c0;
+        }
+        h3 {
+            margin-top: 24px;
+            color: #34495e;
+        }
+        ul {
+            padding-left: 18px;
+        }
+        a {
+            display: block;
+            margin-top: 18px;
+            text-align: center;
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            .container {
+                max-width: 98vw;
+                padding: 12px 4vw 12px 4vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Crear un nuevo curso</h2>
+        <form method="POST">
+            <label>Nombre del curso:</label>
+            <input type="text" name="nombre_curso" required>
+            <button type="submit">Agregar</button>
+        </form>
+        <h3>Cursos existentes:</h3>
+        <ul>
+            {% for curso in cursos %}
+                <li>{{ curso }}</li>
+            {% endfor %}
+        </ul>
+        <a href="/">Volver al registro de firmas</a>
+    </div>
+</body>
+</html>

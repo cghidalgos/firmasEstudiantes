@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Acta de Registro Estudiantes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 480px;
+            margin: 32px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 24px 18px 18px 18px;
+        }
+        h2 {
+            text-align: center;
+            color: #2d3a4a;
+            margin-bottom: 18px;
+        }
+        form label {
+            display: block;
+            margin-bottom: 6px;
+            color: #34495e;
+            font-weight: 500;
+        }
+        form input, form select {
+            width: 100%;
+            padding: 8px 10px;
+            margin-bottom: 14px;
+            border: 1px solid #cfd8dc;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        #signature-pad {
+            border: 1.5px solid #34495e;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            height: 150px;
+            background: #fafafa;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        button {
+            flex: 1;
+            padding: 10px 0;
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button[type="button"] {
+            background: #b0bec5;
+            color: #263238;
+        }
+        button:hover {
+            background: #1565c0;
+        }
+        button[type="button"]:hover {
+            background: #90a4ae;
+        }
+        .error {
+            color: #d32f2f;
+            background: #ffebee;
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        @media (max-width: 600px) {
+            .container {
+                max-width: 98vw;
+                padding: 12px 4vw 12px 4vw;
+            }
+            #signature-pad {
+                height: 120px;
+            }
+        }
+        .info-box {
+            display: flex;
+            align-items: flex-start;
+            background: #e3f2fd;
+            border-radius: 8px;
+            padding: 12px 10px;
+            margin-bottom: 18px;
+            color: #1565c0;
+            font-size: 1rem;
+            box-shadow: 0 1px 4px rgba(33,150,243,0.07);
+        }
+        .info-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+            margin-top: 2px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .firma-group {
+            margin-bottom: 18px;
+        }
+        .canvas-wrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 10px 0;
+            box-shadow: 0 1px 4px rgba(44,62,80,0.07);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Acta de Registro Estudiantes</h2>
+        <div class="info-box">
+            <span class="info-icon">&#128221;</span>
+            <span>
+                Este registro sirve como bitácora para informar que a los estudiantes se les realizó la socialización del curso, se les explicó cómo se evaluará y cómo se llevará a cabo el semestre <b>2025-2</b>.
+            </span>
+        </div>
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+        <form method="POST" action="/submit" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="curso">Seleccione su Curso:</label>
+                <select name="curso" id="curso" required>
+                    {% for curso in cursos %}
+                        <option value="{{ curso }}">{{ curso }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="nombre">Nombre completo:</label>
+                <input type="text" name="nombre" id="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="codigo">Código de estudiante:</label>
+                <input type="text" name="codigo" id="codigo" required>
+            </div>
+            <div class="firma-group">
+                <label for="signature-pad">Firma:</label>
+                <div class="canvas-wrap">
+                    <canvas id="signature-pad"></canvas>
+                </div>
+                <input type="hidden" name="firma" id="firma">
+            </div>
+            <div class="btn-row">
+                <button type="button" onclick="clearPad()">Limpiar</button>
+                <button type="submit">Enviar</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        const canvas = document.getElementById('signature-pad');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            if (e.touches) {
+                return {
+                    x: e.touches[0].clientX - rect.left,
+                    y: e.touches[0].clientY - rect.top
+                };
+            } else {
+                return {
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top
+                };
+            }
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            drawing = true;
+            const pos = getPos(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        });
+        canvas.addEventListener('mouseup', () => { drawing = false; });
+        canvas.addEventListener('mouseout', () => { drawing = false; });
+        canvas.addEventListener('mousemove', (e) => {
+            if (!drawing) return;
+            const pos = getPos(e);
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#1976d2';
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        });
+
+        // Touch events para móviles
+        canvas.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            drawing = true;
+            const pos = getPos(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        });
+        canvas.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            drawing = false;
+        });
+        canvas.addEventListener('touchcancel', function(e) {
+            e.preventDefault();
+            drawing = false;
+        });
+        canvas.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+            if (!drawing) return;
+            const pos = getPos(e);
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#1976d2';
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        });
+
+        function clearPad() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+        }
+
+        document.querySelector('form').addEventListener('submit', function(e) {
+            document.getElementById('firma').value = canvas.toDataURL();
+        });
+    </script>
+</body>
+</html>
