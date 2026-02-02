@@ -1,0 +1,12 @@
+.DS_Store
+__pycache__/
+*.pyc
+
+# Generated files
+firmas_temp/
+# Nota: actas/ ahora puede contener archivos subidos por el profesor.
+# Si NO quieres versionarlos, descomenta la siguiente línea:
+# actas/
+
+# Actas legacy generadas en la raíz
+F6_Acta_*.docx

@@ -5,7 +5,12 @@ WORKDIR /app
 
 COPY . /app
 
-# Instalar dependencias
+# Dependencias del sistema (para convertir .doc -> .docx)
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends libreoffice-writer \
+	&& rm -rf /var/lib/apt/lists/*
+
+# Instalar dependencias Python
 RUN pip install --no-cache-dir flask python-docx pillow
 
 EXPOSE 5006

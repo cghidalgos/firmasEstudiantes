@@ -1,100 +1,146 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Crear Cursos</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f4f6f8;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 400px;
-            margin: 32px auto;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            padding: 24px 18px 18px 18px;
-        }
-        h2 {
-            text-align: center;
-            color: #2d3a4a;
-            margin-bottom: 18px;
-        }
-        form label {
-            display: block;
-            margin-bottom: 6px;
-            color: #34495e;
-            font-weight: 500;
-        }
-        form input {
-            width: 100%;
-            padding: 8px 10px;
-            margin-bottom: 14px;
-            border: 1px solid #cfd8dc;
-            border-radius: 6px;
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 10px 0;
-            background: #1976d2;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        button:hover {
-            background: #1565c0;
-        }
-        h3 {
-            margin-top: 24px;
-            color: #34495e;
-        }
-        ul {
-            padding-left: 18px;
-        }
-        a {
-            display: block;
-            margin-top: 18px;
-            text-align: center;
-            color: #1976d2;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        @media (max-width: 600px) {
-            .container {
-                max-width: 98vw;
-                padding: 12px 4vw 12px 4vw;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Crear un nuevo curso</h2>
-        <form method="POST">
-            <label>Nombre del curso:</label>
-            <input type="text" name="nombre_curso" required>
-            <button type="submit">Agregar</button>
-        </form>
-        <h3>Cursos existentes:</h3>
-        <ul>
-            {% for curso in cursos %}
-                <li>{{ curso }}</li>
-            {% endfor %}
-        </ul>
-        <a href="/">Volver al registro de firmas</a>
+{% extends 'base.html' %}
+
+{% block title %}Crear curso{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-11 col-lg-9">
+            <div class="card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h1 class="h4 mb-1">Administración de cursos</h1>
+                            <div class="text-body-secondary">Crear, modificar y descargar actas.</div>
+                            <div class="mt-2 d-flex flex-wrap gap-2">
+                                <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin_manual_usuario') }}" target="_blank" rel="noopener">Ver manual de usuario</a>
+                            </div>
+                        </div>
+                        <div class="text-body-secondary small">Usuario: <span class="fw-semibold">admin</span></div>
+                    </div>
+
+                    <hr class="my-4" />
+
+                    <h2 class="h6 text-uppercase text-body-secondary">Crear curso</h2>
+
+                    <form method="POST" enctype="multipart/form-data" class="row g-2 align-items-end">
+                        <div class="col-12">
+                            <label for="profesor" class="form-label">Nombre del profesor</label>
+                            <input id="profesor" class="form-control" type="text" name="profesor" placeholder="Ej: Prof. Ana Gómez" required />
+                        </div>
+                        <div class="col-12">
+                            <label for="nombre_curso" class="form-label">Nombre del curso</label>
+                            <input id="nombre_curso" class="form-control" type="text" name="nombre_curso" placeholder="Ej: Bases de Datos 1" required />
+                            <div class="form-text">Este nombre se usa para identificar el acta y para que los estudiantes seleccionen el curso.</div>
+                        </div>
+                        <div class="col-12">
+                            <label for="acta" class="form-label">Acta (.docx / .doc)</label>
+                            <input id="acta" class="form-control" type="file" name="acta" accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required />
+                            <div class="form-text">
+                                Ejemplo: <strong>F6. Acta de inicio de curso.doc</strong>.
+                                Puedes subir <code>.doc</code> o <code>.docx</code>; el sistema lo convertirá/guardará como <strong>f6_&lt;nombre_del_curso&gt;.docx</strong>.
+                            </div>
+                            <div class="d-flex gap-2 mt-2">
+                                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('download_example_acta', format='doc') }}">Descargar ejemplo (.doc)</a>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-primary w-100" type="submit">Agregar</button>
+                        </div>
+                    </form>
+
+                    <hr class="my-4" />
+
+                    <h2 class="h6 text-uppercase text-body-secondary">Cursos existentes</h2>
+                    {% if cursos|length == 0 %}
+                        <div class="text-body-secondary">Aún no hay cursos.</div>
+                    {% else %}
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Curso</th>
+                                        <th>Profesor</th>
+                                        <th>Acta</th>
+                                        <th class="text-end">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for curso in cursos %}
+                                        <tr>
+                                            <td class="fw-semibold">{{ curso.nombre }}</td>
+                                            <td>{{ curso.profesor }}</td>
+                                            <td class="text-body-secondary small">{{ (curso.acta_path or '')|replace('actas/','') }}</td>
+                                            <td class="text-end">
+                                                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('editar_curso', course_id=curso.id) }}">Editar</a>
+                                                <a class="btn btn-sm btn-outline-primary" href="{{ url_for('download_acta', course_id=curso.id) }}">Descargar acta</a>
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deleteCourseModal"
+                                                    data-course-name="{{ curso.nombre }}"
+                                                    data-delete-url="{{ url_for('eliminar_curso', course_id=curso.id) }}"
+                                                >
+                                                    Eliminar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+
+                    <!-- Modal eliminar curso -->
+                    <div class="modal fade" id="deleteCourseModal" tabindex="-1" aria-labelledby="deleteCourseModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="deleteCourseModalLabel">Eliminar curso</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="alert alert-warning" role="alert">
+                                        Esta acción elimina el curso del sistema. Se requiere contraseña.
+                                    </div>
+                                    <div class="mb-2">
+                                        Curso: <span class="fw-semibold" id="deleteCourseName">—</span>
+                                    </div>
+                                    <form id="deleteCourseForm" method="POST" action="#">
+                                        <div class="mb-3">
+                                            <label for="delete_password_modal" class="form-label">Contraseña de eliminación</label>
+                                            <input id="delete_password_modal" class="form-control" type="password" name="delete_password" placeholder="lidis2026" required />
+                                        </div>
+                                        <button class="btn btn-danger w-100" type="submit">Eliminar definitivamente</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        const deleteModal = document.getElementById('deleteCourseModal');
+        if (deleteModal) {
+            deleteModal.addEventListener('show.bs.modal', (event) => {
+                const button = event.relatedTarget;
+                const courseName = button?.getAttribute('data-course-name') || '—';
+                const deleteUrl = button?.getAttribute('data-delete-url') || '#';
+
+                const nameEl = deleteModal.querySelector('#deleteCourseName');
+                const formEl = deleteModal.querySelector('#deleteCourseForm');
+                const passEl = deleteModal.querySelector('#delete_password_modal');
+
+                if (nameEl) nameEl.textContent = courseName;
+                if (formEl) formEl.action = deleteUrl;
+                if (passEl) passEl.value = '';
+            });
+        }
+    </script>
+{% endblock %}

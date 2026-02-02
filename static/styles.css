@@ -1,0 +1,60 @@
+:root {
+  --app-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+body {
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+}
+
+.navbar-brand {
+  letter-spacing: 0.2px;
+}
+
+.card {
+  border: 0;
+  box-shadow: var(--app-shadow);
+}
+
+.form-text {
+  color: rgba(33, 37, 41, 0.7);
+}
+
+.signature-wrap {
+  background: #fff;
+  border: 1px dashed rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+#signature-pad {
+  width: 100%;
+  height: 170px;
+  display: block;
+  background: #fafafa;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  touch-action: none;
+}
+
+@media (max-width: 576px) {
+  #signature-pad {
+    height: 140px;
+  }
+}
+
+.btn-primary {
+  box-shadow: 0 6px 18px rgba(13, 110, 253, 0.2);
+}
+
+.btn-outline-secondary {
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}

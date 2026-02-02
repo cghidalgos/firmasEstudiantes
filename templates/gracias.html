@@ -1,51 +1,35 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>¡Registro exitoso!</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f4f6f8;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 400px;
-            margin: 60px auto;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            padding: 32px 18px 24px 18px;
-            text-align: center;
-        }
-        h2 {
-            color: #1976d2;
-            margin-bottom: 18px;
-        }
-        .emoji {
-            font-size: 2.5em;
-            margin-bottom: 12px;
-        }
-        a {
-            display: inline-block;
-            margin-top: 18px;
-            color: #1976d2;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="emoji">🎉</div>
-        <h2>¡Gracias!</h2>
-        <div>Tu registro se ha guardado exitosamente.</div>
-        <a href="/">Volver al inicio</a>
+{% extends 'base.html' %}
+
+{% block title %}Registro exitoso{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card">
+                <div class="card-body p-4 text-center">
+                    <div class="display-6 mb-2" aria-hidden="true">🎉</div>
+                    <h1 class="h4 mb-2">¡Gracias!</h1>
+                    <p class="text-body-secondary mb-4">Tu registro se guardó exitosamente.</p>
+
+                    {% if curso or codigo or nombre %}
+                        <div class="text-start mx-auto" style="max-width: 520px;">
+                            <div class="list-group mb-4">
+                                {% if curso %}
+                                    <div class="list-group-item d-flex justify-content-between"><span class="text-body-secondary">Curso</span><span class="fw-semibold">{{ curso }}</span></div>
+                                {% endif %}
+                                {% if nombre %}
+                                    <div class="list-group-item d-flex justify-content-between"><span class="text-body-secondary">Nombre</span><span class="fw-semibold">{{ nombre }}</span></div>
+                                {% endif %}
+                                {% if codigo %}
+                                    <div class="list-group-item d-flex justify-content-between"><span class="text-body-secondary">Código</span><span class="fw-semibold">{{ codigo }}</span></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+{% endblock %}
